@@ -1,4 +1,4 @@
-# `blackieops.backup` - Automated backups with `restic`
+# Automated backups with `restic`
 
 This is an [Ansible][ansible] role for deploying and configuring `restic` as a
 backup solution.
