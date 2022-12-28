@@ -1,5 +1,7 @@
 # Automated backups with `restic`
 
+[![Molecule Tests](https://github.com/blackieops/ansible-role-backup/actions/workflows/test.yml/badge.svg)](https://github.com/blackieops/ansible-role-backup/actions/workflows/test.yml)
+
 This is an [Ansible][ansible] role for deploying and configuring `restic` as a
 backup solution.
 
