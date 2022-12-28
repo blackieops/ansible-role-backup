@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# vim: ts=8 sw=8 noexpandtab
+
+set -euf -o pipefail
+
+{% for cmd in backup_prepare_commands %}
+{{ cmd }}
+{% endfor %}
+
+{% for e in backup_env %}
+export {{ e.key }}="{{ e.value }}"
+{% endfor %}
+
+RESTIC="/usr/local/bin/restic"
+export RESTIC_PASSWORD="{{ backup_restic_password }}"
+
+if [[ "${1:-}" = "init" ]] ; then
+	${RESTIC} init -r "{{ backup_restic_repository }}"
+	exit
+fi
+
+${RESTIC} backup -r "{{ backup_restic_repository }}" \
+	{% for pattern in backup_exclude %}--exclude "{{ pattern }}" {% endfor %}\
+	{{ backup_include | join(" ") }}

@@ -1,0 +1,55 @@
+---
+- name: Download restic release
+  ansible.builtin.get_url:
+    url: "{{ backup_restic_release_url }}"
+    dest: /usr/local/src/restic.bz2
+    checksum: "{{ backup_restic_release_checksum }}"
+    mode: 0600
+  register: restic_downloaded
+  tags:
+    - backup
+
+- name: Install restic
+  when: restic_downloaded.changed
+  block:
+    - name: Extract restic
+      ansible.builtin.command: bzip2 -k -d /usr/local/src/restic.bz2
+      tags:
+        - backup
+
+    - name: Rename restic binary
+      ansible.builtin.copy:
+        src: /usr/local/src/restic
+        dest: /usr/local/bin/restic
+        mode: 0755
+        force: true
+        remote_src: true
+      tags:
+        - backup
+
+- name: Install backup script
+  ansible.builtin.template:
+    src: restic_backup
+    dest: /usr/local/bin/restic_backup
+    mode: 0700
+  tags:
+    - config
+    - backup
+
+- name: Initialize restic repository
+  ansible.builtin.command: /usr/local/bin/restic_backup init
+  when: backup_initialize
+  tags:
+    - backup
+
+- name: Add cron job to run backup regularly
+  become: true
+  become_user: "{{ backup_user }}"
+  ansible.builtin.cron:
+    name: Automatic backup
+    minute: "{{ backup_schedule_minute }}"
+    hour: "{{ backup_schedule_hour }}"
+    day: "{{ backup_schedule_day }}"
+    job: /usr/local/bin/restic_backup
+  tags:
+    - backup

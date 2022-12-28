@@ -1,0 +1,70 @@
+---
+
+# Backup configuration options
+# ----------------------
+
+# Cron-compliant syntax to configure when the backups will be taken.
+backup_schedule_day: "*"
+backup_schedule_hour: "2"
+backup_schedule_minute: "15"
+
+# A list of commands to execute before the backup begins. This could be used to
+# prepare the machine in some way -- pause a service, flush some stuff to disk,
+# run an export, etc. These are run directly in the script before restic is
+# called so are executed by the same user and in the same context as the backup
+# itself.
+backup_prepare_commands: []
+
+# The user who will execute the backup. Defaults to root. Recommended to set
+# this to whichever user has the minimal set of permissions needed just to read
+# the source files.
+backup_user: root
+
+# Restic release options
+# ----------------------
+backup_restic_arch: amd64
+backup_restic_version: "0.14.0"
+backup_restic_artifact: restic_{{ backup_restic_version }}_linux_{{ backup_restic_arch }}
+backup_restic_release_checksum: "sha256:c8da7350dc334cd5eaf13b2c9d6e689d51e7377ba1784cc6d65977bd44ee1165"
+backup_restic_release_url: "https://github.com/restic/restic/releases/download/v{{ backup_restic_version }}/{{ backup_restic_artifact }}.bz2"
+
+# Restic target options
+# ---------------------
+
+# Set environment variables before running the backup.
+# See: https://restic.readthedocs.io/en/stable/040_backup.html#environment-variables
+#
+## Example
+#
+#     backup_env:
+#       - key: AZURE_ACCOUNT_NAME
+#         value: exampleaccount
+#       - key: AZURE_ACCOUNT_KEY
+#         value: asdfasdfasdf
+#
+backup_env: []
+
+# A Restic repository definition to use as a target.
+# For example:
+#
+#     - sftp:user@host:/srv/restic-repo
+#     - azure:foo:/
+#
+# See: https://restic.readthedocs.io/en/stable/030_preparing_a_new_repo.html
+backup_restic_repository: ""
+
+# Encryption passphrase to protect backup data. Ensure this is stored securely,
+# such as in Ansible Vault or an external program.
+backup_restic_password: ""
+
+# Set this to true (usually temporarily, once, with `-e`) to initialize the
+# backup repository.
+backup_initialize: false
+
+# Backup source options
+# ---------------------
+backup_exclude: []
+backup_include:
+  - /root
+  - /home
+  - /srv
