@@ -2,5 +2,8 @@
 - name: Converge
   hosts: all
   become: true
+  vars:
+    backup_restic_password: "swordfish"
+    backup_restic_repository: "/tmp/backup"
   roles:
     - role: blackieops.backup
