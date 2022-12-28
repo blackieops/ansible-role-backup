@@ -1,4 +1,11 @@
 ---
+- name: Ensure presence of bzip2
+  ansible.builtin.package:
+    name: bzip2
+    state: present
+  tags:
+    - backup
+
 - name: Download restic release
   ansible.builtin.get_url:
     url: "{{ backup_restic_release_url }}"
