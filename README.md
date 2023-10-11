@@ -51,7 +51,7 @@ your `requirements.yml`:
 
 ```yaml
 # via Galaxy
-- src: blackieops.backup
+- role: blackieops.backup
 
 # or via Git
 - src: https://github.com/blackieops/ansible-role-backup.git
