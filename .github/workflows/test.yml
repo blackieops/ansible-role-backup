@@ -31,10 +31,16 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install test dependencies.
-        run: pip3 install ansible molecule molecule-plugins[docker] docker
+      - name: Install ansible-lint
+        run: pip3 install ansible ansible-lint
 
-      - name: Run Molecule tests.
+      - name: Run ansible-lint
+        run: ansible-lint
+
+      - name: Install molecule dependencies
+        run: pip3 install molecule molecule-plugins[docker] docker
+
+      - name: Run molecule tests
         run: molecule test
         env:
           PY_COLORS: '1'
