@@ -11,7 +11,7 @@
     url: "{{ backup_restic_release_url }}"
     dest: /usr/local/src/restic.bz2
     checksum: "{{ backup_restic_release_checksum }}"
-    mode: 0600
+    mode: "0600"
   register: restic_downloaded
   tags:
     - backup
@@ -28,7 +28,7 @@
       ansible.builtin.copy:
         src: /usr/local/src/restic
         dest: /usr/local/bin/restic
-        mode: 0755
+        mode: "0755"
         force: true
         remote_src: true
       tags:
@@ -38,7 +38,7 @@
   ansible.builtin.template:
     src: restic_backup
     dest: /usr/local/bin/restic_backup
-    mode: 0700
+    mode: "0700"
   tags:
     - config
     - backup
