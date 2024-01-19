@@ -6,6 +6,16 @@
   tags:
     - backup
 
+# Ubuntu minimal images don't come with cron. Limiting to "debian only" for now
+# as I haven't seen this be a problem anywhere else.
+- name: Ensure presence of cron
+  ansible.builtin.package:
+    name: cron
+    state: present
+  when: ansible_facts["os_family"] == "Debian"
+  tags:
+    - backup
+
 - name: Download restic release
   ansible.builtin.get_url:
     url: "{{ backup_restic_release_url }}"
